@@ -1,0 +1,51 @@
+name: Issues-Mattermost
+
+on:
+  workflow_call:
+    secrets:
+      WEBHOOK:
+        required: true
+
+jobs:
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Mattermost Message
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_URL: ${{ github.event.issue.repository_url }}
+          ACTION: ${{ github.event.action }}
+          ACTOR: ${{ github.actor }}
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ toJSON(github.event.issue.body) }}
+          ANSWER: ${{ github.event.issue.comments_url }}
+          LINK: ${{ github.event.issue.html_url }}
+          COMMENT_BODY: ${{ toJSON(github.event.comment.body) }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+        shell: bash
+        run: |
+          AUTHOR=${ACTOR}
+          ICON=":ticket:"
+          BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
+          if [ ! -z "${COMMENT_BODY}" ]; then
+            AUTHOR=${COMMENT_AUTHOR}
+            ICON=":speech_balloon:"
+            BODYLINE=$(echo ${COMMENT_BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
+          fi;
+          echo "
+          {\"text\":
+          \"## ${ICON} ${TITLE}\n
+          ${ACTION} in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
+          \`\`\`text\n
+          ${BODYLINE}\n
+          \`\`\`
+          \n----\n
+          [open issue](${LINK})
+          \"
+          }
+          " | paste -d' ' -s - > mattermost.json
+      - name: Send Mattermost Message
+        uses: mattermost/action-mattermost-notify@master
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
