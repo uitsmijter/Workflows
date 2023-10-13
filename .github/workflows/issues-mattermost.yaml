@@ -8,7 +8,7 @@ on:
 
 jobs:
   notify:
-    name: Notify
+    name: Mattermost
     runs-on: ubuntu-latest
     steps:
       - name: Create Mattermost Message
