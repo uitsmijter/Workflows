@@ -20,14 +20,18 @@ jobs:
           BODY: ${{ toJSON(github.event.head_commit.message) }}
           ANSWER: ${{ github.event.issue.comments_url }}
           LINK: ${{ github.event.head_commit.url }}
+          STATUS: ${{ job.status }}
         shell: bash
         run: |
           AUTHOR=${ACTOR}
-          ICON=":robot:"
+          ICON=":octagonal_sign:"
+          if [ "${STATUS}" == "success" ]; then
+              ICON=":robot:"
+          fi
           BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
           echo "
           {\"text\":
-          \"## ${ICON} ${TITLE}\n
+          \"## ${ICON} ${TITLE} [${STATUS}]\n
           in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
           \`\`\`text\n
           ${BODYLINE}\n
