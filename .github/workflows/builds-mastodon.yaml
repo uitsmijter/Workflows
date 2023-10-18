@@ -1,0 +1,32 @@
+name: Builds-Mattermost
+
+on:
+  workflow_call:
+    secrets:
+      MASTODON_URL:
+        required: true
+      MASTODON_ACCESS_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: technote-space/workflow-conclusion-action@v3
+      - name: Send toot to Mastodon
+        id: mastodon
+        uses: cbrgm/mastodon-github-action@v1
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_URL: ${{ github.repository.html_url }}
+          ACTOR: ${{ github.actor }}
+          BODY: ${{ toJSON(github.event.head_commit.message) }}
+          STATUS: ${{ env.WORKFLOW_CONCLUSION }}
+          MASTODON_URL: ${{ secrets.MASTODON_URL }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+        with:
+          message: |
+            ${{ env.REPOSITORY }} build by ${{ env.ACTOR }}
+            Status: ${{ env.STATUS }}
+          visibility: "public"
+
