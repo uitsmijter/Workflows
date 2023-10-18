@@ -11,6 +11,7 @@ jobs:
     name: Mattermost
     runs-on: ubuntu-latest
     steps:
+      - uses: aus-der-technik/workflow-conclusion-action@v3
       - name: Create Mattermost Message
         env:
           REPOSITORY: ${{ github.repository }}
@@ -20,18 +21,18 @@ jobs:
           BODY: ${{ toJSON(github.event.head_commit.message) }}
           ANSWER: ${{ github.event.issue.comments_url }}
           LINK: ${{ github.event.head_commit.url }}
-          STATUS: ${{ job.status }}
         shell: bash
         run: |
           AUTHOR=${ACTOR}
           ICON=":octagonal_sign:"
-          if [ "${STATUS}" == "success" ]; then
+          STATUS_TEXT="${{ env.WORKFLOW_CONCLUSION }}"
+          if [ "${{ env.WORKFLOW_CONCLUSION }}" == "success" ]; then
               ICON=":robot:"
           fi
           BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
           echo "
           {\"text\":
-          \"## ${ICON} ${TITLE} [${STATUS}]\n
+          \"## ${ICON} ${TITLE} [${FAILURE}]\n
           in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
           \`\`\`text\n
           ${BODYLINE}\n
