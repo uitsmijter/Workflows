@@ -1,0 +1,43 @@
+name: Builds-Mattermost
+
+on:
+  workflow_call:
+    secrets:
+      WEBHOOK:
+        required: true
+
+jobs:
+  notify:
+    name: Mattermost
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Mattermost Message
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_URL: ${{ github.repository.html_url }}
+          ACTOR: ${{ github.actor }}
+          TITLE: ${{ github.workflow }}
+          BODY: ${{ toJSON(github.event.head_commit.message) }}
+          ANSWER: ${{ github.event.issue.comments_url }}
+          LINK: ${{ github.event.head_commit.url }}
+        shell: bash
+        run: |
+          AUTHOR=${ACTOR}
+          ICON=":robot:"
+          BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
+          echo "
+          {\"text\":
+          \"## ${ICON} ${TITLE}\n
+          in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
+          \`\`\`text\n
+          ${BODYLINE}\n
+          \`\`\`
+          \n----\n
+          [Commit](${LINK})
+          \"
+          }
+          " | paste -d' ' -s - > mattermost.json
+      - name: Send Mattermost Message
+        uses: mattermost/action-mattermost-notify@master
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
