@@ -17,9 +17,9 @@ jobs:
         env:
           STATUS: ${{ env.WORKFLOW_CONCLUSION }}
         run: |
-          ICON="✅"
+          ICON=":white_check_mark:"
           if [ "${STATUS}" == "failure" ]; then
-            ICON="❌"
+            ICON=":red_circle:"
           fi
           export ICON
       - name: Send toot to Mastodon
