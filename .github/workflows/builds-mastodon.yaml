@@ -10,6 +10,7 @@ on:
 
 jobs:
   notify:
+    name: Mastodon
     runs-on: ubuntu-latest
     steps:
       - uses: technote-space/workflow-conclusion-action@v3
