@@ -33,7 +33,8 @@ jobs:
           BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
           echo "
           {\"text\":
-          \"## ${ICON} ${REF} [${STATUS_TEXT}]\n
+          \"## ${ICON} ${REF}\n
+          Status: ${STATUS_TEXT} \n
           in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
           \`\`\`text\n
           ${BODYLINE}\n
