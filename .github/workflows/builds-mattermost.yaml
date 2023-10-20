@@ -16,6 +16,7 @@ jobs:
         env:
           REPOSITORY: ${{ github.repository }}
           REPOSITORY_URL: ${{ github.repository.html_url }}
+          REF: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           TITLE: ${{ github.workflow }}
           BODY: ${{ toJSON(github.event.head_commit.message) }}
@@ -32,7 +33,7 @@ jobs:
           BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
           echo "
           {\"text\":
-          \"## ${ICON} ${TITLE} [${STATUS_TEXT}]\n
+          \"## ${ICON} ${REF} [${STATUS_TEXT}]\n
           in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
           \`\`\`text\n
           ${BODYLINE}\n
