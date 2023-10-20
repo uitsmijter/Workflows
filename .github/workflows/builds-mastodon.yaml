@@ -28,15 +28,20 @@ jobs:
         env:
           REPOSITORY: ${{ github.repository }}
           REPOSITORY_URL: ${{ github.repository.html_url }}
+          REF: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           BODY: ${{ toJSON(github.event.head_commit.message) }}
           STATUS: ${{ env.WORKFLOW_CONCLUSION }}
           MASTODON_URL: ${{ secrets.MASTODON_URL }}
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          LINK: ${{ github.event.head_commit.url }}
         with:
           message: |
             ${{ env.REPOSITORY }} build by ${{ env.ACTOR }}
+            Branch: ${{ env.REF }}
             Status: ${{ env.icon }} ${{ env.STATUS }}
+            
             ${{ env.BODY }}
+            ${{ env.LINK }}
           visibility: "public"
 
