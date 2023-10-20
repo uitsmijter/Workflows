@@ -28,5 +28,7 @@ jobs:
           message: |
             ${{ env.REPOSITORY }} build by ${{ env.ACTOR }}
             Status: ${{ env.STATUS }}
+            
+            ${{ env.BODY }}
           visibility: "public"
 
