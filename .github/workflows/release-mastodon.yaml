@@ -1,0 +1,36 @@
+name: Builds-Mattermost
+
+on:
+  workflow_call:
+    secrets:
+      MASTODON_URL:
+        required: true
+      MASTODON_ACCESS_TOKEN:
+        required: true
+
+jobs:
+  notify:
+    name: Mastodon
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send toot to Mastodon
+        id: mastodon
+        uses: cbrgm/mastodon-github-action@v1
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_URL: ${{ github.repository.html_url }}
+          REF: ${{ github.ref_name }}
+
+          BODY: ${{ toJSON(github.event.head_commit.message) }}
+          MASTODON_URL: ${{ secrets.MASTODON_URL }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+        with:
+          message: |
+            New Version ${{ env.REF }} is out now! 
+            
+            ${{ env.BODY }}
+            
+            https://uitsmijter.io/releases
+            ${{ env.REPOSITORY_URL }}
+          visibility: "public"
+
