@@ -33,7 +33,7 @@ jobs:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
         with:
           message: |
-            ${{ env.REPO_NAME }} released a new version.
+            ${{ env.REPOSITORY }} released a new version.
             ${{ env.TITLE }} is out now! 
             
             ${{ env.BODY }}
