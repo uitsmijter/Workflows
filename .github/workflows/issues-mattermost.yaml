@@ -6,6 +6,17 @@ on:
       WEBHOOK:
         required: true
 
+  issues:
+    types:
+      - opened
+      - edited
+      - closed
+      - reopened
+  issue_comment:
+    types:
+      - created
+      - edited
+
 jobs:
   notify:
     name: Mattermost

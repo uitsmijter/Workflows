@@ -6,6 +6,10 @@ on:
       WEBHOOK:
         required: true
 
+  push:
+    branches:
+      - main
+
 jobs:
   notify:
     name: Mattermost

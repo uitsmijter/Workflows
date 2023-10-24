@@ -8,6 +8,10 @@ on:
       MASTODON_ACCESS_TOKEN:
         required: true
 
+  release:
+    types:
+      - published
+
 jobs:
   notify:
     name: Mastodon

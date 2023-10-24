@@ -6,6 +6,10 @@ on:
       WEBHOOK:
         required: true
 
+  pull_request:
+    types:
+      - opened
+
 jobs:
   notify:
     name: Mattermost
