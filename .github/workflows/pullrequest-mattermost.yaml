@@ -17,7 +17,9 @@ jobs:
           REPOSITORY_URL: ${{ github.event.issue.repository_url }}
           ACTION: ${{ github.event.action }}
           ACTOR: ${{ github.actor }}
-          LINK: ${{ github.event._links.pull_request.html }}
+          LINK: ${{ github.event.pull_request._links.html }}
+          BODY: ${{ github.event.pull_request.body }}
+          TITLE: ${{ github.event.pull_request.title }}
         shell: bash
         run: |
           AUTHOR=${ACTOR}
@@ -26,6 +28,7 @@ jobs:
           echo "
           {\"text\":
           \"## ${ICON} New PR!\n
+          ### ${TITLE}\n
           ${ACTION} in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
           \`\`\`text\n
           ${BODYLINE}\n
