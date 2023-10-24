@@ -21,7 +21,7 @@ jobs:
           REPOSITORY_URL: ${{ github.event.issue.repository_url }}
           ACTION: ${{ github.event.action }}
           ACTOR: ${{ github.actor }}
-          LINK: ${{ github.event.pull_request._links.html }}
+          LINK: ${{ github.event.pull_request._links.html.href }}
           BODY: ${{ github.event.pull_request.body }}
           TITLE: ${{ github.event.pull_request.title }}
         shell: bash
