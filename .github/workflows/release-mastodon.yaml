@@ -1,4 +1,4 @@
-name: Builds-Mattermost
+name: Release-Mastodon
 
 on:
   workflow_call:

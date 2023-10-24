@@ -1,4 +1,4 @@
-name: Issues-Mattermost
+name: PullRequest-Mattermost
 
 on:
   workflow_call:
