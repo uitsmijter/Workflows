@@ -24,17 +24,21 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           REPOSITORY_URL: ${{ github.repository.html_url }}
           REF: ${{ github.ref_name }}
-
-          BODY: ${{ toJSON(github.event.head_commit.message) }}
+          BODY: ${{ github.event.release.body }}
+          LINK: ${{ github.event.release.html_url }}
+          TITLE: ${{ github.event.release.name }}
+          REPO_URL: ${{ github.event.release.repository.html_url }}
+          REPO_NAME: ${{ github.event.release.repository.full_name }}
           MASTODON_URL: ${{ secrets.MASTODON_URL }}
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
         with:
           message: |
-            New Version ${{ env.REF }} is out now! 
+            ${{ env.REPO_NAME }} released a new version.
+            ${{ env.TITLE }} is out now! 
             
             ${{ env.BODY }}
+            ${{ env.LINK }}
             
-            https://uitsmijter.io/releases
-            ${{ env.REPOSITORY_URL }}
+            ${{ env.REPO_URL }}
           visibility: "public"
 
