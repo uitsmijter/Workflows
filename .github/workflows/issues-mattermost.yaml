@@ -39,7 +39,7 @@ jobs:
           AUTHOR=${ACTOR}
           ICON=":ticket:"
           BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
-          if [ ! -z "${COMMENT_BODY}" ]; then
+          if [ ! -z "${COMMENT_BODY}" ] && [ "${COMMENT_BODY}" != "null" ]; then
             AUTHOR=${COMMENT_AUTHOR}
             ICON=":speech_balloon:"
             BODYLINE=$(echo ${COMMENT_BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
