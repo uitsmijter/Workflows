@@ -42,6 +42,7 @@ jobs:
           \"
           }
           " | paste -d' ' -s - > mattermost.json
+          cat mattermost.json
       - name: Send Mattermost Message
         uses: mattermost/action-mattermost-notify@master
         env:
