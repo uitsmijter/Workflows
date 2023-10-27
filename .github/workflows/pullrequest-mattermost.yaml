@@ -18,7 +18,7 @@ jobs:
       - name: Create Mattermost Message
         env:
           REPOSITORY: ${{ github.repository }}
-          REPOSITORY_URL: ${{ github.event.issue.repository_url }}
+          REPOSITORY_URL: ${{ github.event.pull_request._links.html.html_url }}
           ACTION: ${{ github.event.action }}
           ACTOR: ${{ github.actor }}
           LINK: ${{ github.event.pull_request._links.html.href }}
