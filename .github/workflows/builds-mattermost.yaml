@@ -34,6 +34,9 @@ jobs:
           if [ "${{ env.WORKFLOW_CONCLUSION }}" == "success" ]; then
               ICON=":robot:"
           fi
+          if [ "${{ env.WORKFLOW_CONCLUSION }}" == "skipped" ]; then
+              ICON=":person_doing_cartwheel:"
+          fi
           BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
           echo "
           {\"text\":
