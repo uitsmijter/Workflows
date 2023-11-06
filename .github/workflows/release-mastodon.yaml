@@ -17,6 +17,10 @@ jobs:
     name: Mastodon
     runs-on: ubuntu-latest
     steps:
+      - name: Trim Body
+        shell: bash
+        run: |
+          export BODY=$(echo "${{ github.event.release.body }}" | cut -c1-350 )
       - name: Send toot to Mastodon
         id: mastodon
         uses: cbrgm/mastodon-github-action@v1
