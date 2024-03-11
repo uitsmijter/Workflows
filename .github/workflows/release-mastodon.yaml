@@ -20,7 +20,7 @@ jobs:
       - name: Trim Body
         shell: bash
         run: |
-          export BODY=$(echo "${{ github.event.release.body }}" | cut -c1-350 )
+          echo "BODY=$(echo "${{ github.event.release.body }}" | cut -c1-350 )" >> $GITHUB_ENV
       - name: Send toot to Mastodon
         id: mastodon
         uses: cbrgm/mastodon-github-action@v1
@@ -28,7 +28,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           REPOSITORY_URL: ${{ github.repository.html_url }}
           REF: ${{ github.ref_name }}
-          BODY: ${{ github.event.release.body }}
+          BODY: ${{ github.env.BODY }}
           LINK: ${{ github.event.release.html_url }}
           TITLE: ${{ github.event.release.name }}
           REPO_URL: ${{ github.event.release.repository.html_url }}
