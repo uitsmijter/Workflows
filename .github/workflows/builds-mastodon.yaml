@@ -28,7 +28,7 @@ jobs:
             ICON=":red_circle:"
           fi
           export ICON
-          echo "${ICON}" >> $GITHUB_ENV
+          echo "ICON=\"${ICON}\"" >> $GITHUB_ENV
       - name: Trim Body
         shell: bash
         run: |
