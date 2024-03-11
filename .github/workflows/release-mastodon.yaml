@@ -22,6 +22,7 @@ jobs:
         run: |
           echo "BODY=$(echo "${{ github.event.release.body }}" | cut -c1-350 )" >> $GITHUB_ENV
       - name: Send toot to Mastodon
+        continue-on-error: true
         id: mastodon
         uses: cbrgm/mastodon-github-action@v1
         env:
