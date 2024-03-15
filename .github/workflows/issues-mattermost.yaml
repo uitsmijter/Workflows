@@ -42,7 +42,7 @@ jobs:
           if [ ! -z "${COMMENT_BODY}" ] && [ "${COMMENT_BODY}" != "null" ]; then
             AUTHOR=${COMMENT_AUTHOR}
             ICON=":speech_balloon:"
-            BODYLINE=$(echo ${COMMENT_BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
+            BODYLINE=$(echo ${COMMENT_BODY} | sed 's/^\"//g' | sed 's/\"$//g' )
           fi;
           echo "
           {\"text\":
