@@ -32,7 +32,8 @@ jobs:
       - name: Trim Body
         shell: bash
         run: |
-          echo "BODY=$(echo "${{ toJSON(github.event.head_commit.message) }}" | cut -c1-350 )" >> $GITHUB_ENV
+          BODYLINE=$(echo "${{ toJSON(github.event.head_commit.message) }}" | sed 's/^\"//g' | sed 's/\"$//g' )
+          echo "BODY=$(echo "${BODYLINE}" | cut -c1-350 )" >> $GITHUB_ENV
       - name: Send toot to Mastodon
         id: mastodon
         continue-on-error: true
