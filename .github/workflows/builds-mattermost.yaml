@@ -53,5 +53,5 @@ jobs:
           " | paste -d' ' -s - > mattermost.json
       - name: Send Mattermost Message
         uses: mattermost/action-mattermost-notify@master
-        env:
+        with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
