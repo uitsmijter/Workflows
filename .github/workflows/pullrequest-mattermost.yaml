@@ -43,7 +43,11 @@ jobs:
           }
           " | paste -d' ' -s - > mattermost.json
           cat mattermost.json
+      - name: Read Content
+        id: getcontent
+        run: echo "::set-output name=payload::$(cat mattermost.json)"          
       - name: Send Mattermost Message
         uses: mattermost/action-mattermost-notify@master
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
+          PAYLOAD: ${{ steps.getcontent.outputs.payload }}
