@@ -20,7 +20,9 @@ jobs:
       - name: Trim Body
         shell: bash
         run: |
-          echo "BODY=$(echo "${{ github.event.release.body }}" | cut -c1-350 )" >> $GITHUB_ENV
+          body="${{ github.event.release.body }}"
+          result="${body:0:350}"
+          echo "BODY=$(echo "${result}")" >> $GITHUB_ENV
       - name: Send toot to Mastodon
         continue-on-error: true
         id: mastodon
