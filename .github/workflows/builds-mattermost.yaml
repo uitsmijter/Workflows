@@ -37,20 +37,25 @@ jobs:
           if [ "${{ env.WORKFLOW_CONCLUSION }}" == "skipped" ]; then
               ICON=":person_doing_cartwheel:"
           fi
-          BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
-          echo "
-          {\"text\":
-          \"## ${ICON} ${REF}\n
-          Status: ${STATUS_TEXT} \n
-          in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
-          \`\`\`text\n
-          ${BODYLINE}\n
-          \`\`\`
-          \n----\n
-          [Commit](${LINK})
-          \"
-          }
-          " | paste -d' ' -s - > mattermost.json
+
+          # Properly handle JSON-escaped body - strip outer quotes and truncate
+          BODYLINE='${{ toJSON(github.event.head_commit.message) }}'
+          BODYLINE="${BODYLINE#\"}"
+          BODYLINE="${BODYLINE%\"}"
+          TRIMMED_BODY="${BODYLINE:0:350}"
+
+          # Create JSON using jq for proper escaping
+          jq -n \
+            --arg icon "$ICON" \
+            --arg ref "$REF" \
+            --arg status "$STATUS_TEXT" \
+            --arg repo "$REPOSITORY" \
+            --arg repo_url "$REPOSITORY_URL" \
+            --arg author "$AUTHOR" \
+            --arg body "$TRIMMED_BODY" \
+            --arg link "$LINK" \
+            '{text: ("## \($icon) \($ref)\nStatus: \($status)\nin: [\($repo)](\($repo_url)) by: **\($author)**\n\n```text\n\($body)\n```\n----\n[Commit](\($link))")}' \
+            > mattermost.json
       - name: Read Content
         id: getcontent
         run: echo "::set-output name=payload::$(cat mattermost.json)"
