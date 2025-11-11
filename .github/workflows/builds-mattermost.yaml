@@ -56,11 +56,8 @@ jobs:
             --arg link "$LINK" \
             '{text: ("## \($icon) \($ref)\nStatus: \($status)\nin: [\($repo)](\($repo_url)) by: **\($author)**\n\n```text\n\($body)\n```\n----\n[Commit](\($link))")}' \
             > mattermost.json
-      - name: Read Content
-        id: getcontent
-        run: echo "::set-output name=payload::$(cat mattermost.json)"
       - name: Send Mattermost Message
         uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
-          PAYLOAD: ${{ steps.getcontent.outputs.payload }}
+          PAYLOAD_FILENAME: mattermost.json
