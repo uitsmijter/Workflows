@@ -18,11 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trim Body
+        env:
+          RELEASE_BODY: ${{ toJSON(github.event.release.body) }}
         shell: bash
         run: |
-          body="${{ github.event.release.body }}"
+          body="$RELEASE_BODY"
+          body="${body#\"}"
+          body="${body%\"}"
           result="${body:0:350}"
-          echo "BODY=$(echo "${result}")" >> $GITHUB_ENV
+          echo "BODY=${result}" >> $GITHUB_ENV
       - name: Send toot to Mastodon
         continue-on-error: true
         id: mastodon

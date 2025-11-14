@@ -30,9 +30,11 @@ jobs:
           export ICON
           echo "ICON=\"${ICON}\"" >> $GITHUB_ENV
       - name: Trim Body
+        env:
+          COMMIT_MESSAGE: ${{ toJSON(github.event.head_commit.message) }}
         shell: bash
         run: |
-          BODYLINE='${{ toJSON(github.event.head_commit.message) }}'
+          BODYLINE="$COMMIT_MESSAGE"
           BODYLINE="${BODYLINE#\"}"
           BODYLINE="${BODYLINE%\"}"
           TRIMMED_BODY="${BODYLINE:0:350}"
