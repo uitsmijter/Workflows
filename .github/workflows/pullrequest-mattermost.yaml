@@ -49,5 +49,5 @@ jobs:
       - name: Send Mattermost Message
         uses: mattermost/action-mattermost-notify@master
         with:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK || secrets.MATTERMOST_WEBHOOK_URL }}
           PAYLOAD: ${{ steps.getcontent.outputs.payload }}
