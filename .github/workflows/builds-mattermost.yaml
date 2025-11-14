@@ -59,9 +59,6 @@ jobs:
       - name: Read Content
         id: getcontent
         run: echo "payload=$(cat mattermost.json)" >> $GITHUB_OUTPUT
-        #run: echo "::set-output name=payload::$(cat mattermost.json)"
-      - name: Pipeline Output
-        run: echo "${{ steps.getcontent.outputs.payload }}"
       - name: Send Mattermost Message
         uses: mattermost/action-mattermost-notify@master
         with:
