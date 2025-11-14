@@ -41,7 +41,7 @@ jobs:
           # Properly handle JSON-escaped body - strip outer quotes and truncate
           BODYLINE="$BODY"
           BODYLINE="${BODYLINE#\"}"
-          BODYLINE="${BODYLINE%\""}
+          BODYLINE="${BODYLINE%\"}"
           TRIMMED_BODY="${BODYLINE:0:350}"
 
           # Create JSON using jq for proper escaping
