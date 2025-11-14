@@ -63,4 +63,5 @@ jobs:
         uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
-          PAYLOAD: ${{ steps.getcontent.outputs.payload }}
+          PAYLOAD: |-
+            ${{ steps.getcontent.outputs.payload }}
