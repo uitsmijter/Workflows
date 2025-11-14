@@ -45,7 +45,7 @@ jobs:
           TRIMMED_BODY="${BODYLINE:0:350}"
 
           # Create JSON using jq for proper escaping
-          jq -n \
+          jq -nc \
             --arg icon "$ICON" \
             --arg ref "$REF" \
             --arg status "$STATUS_TEXT" \
@@ -58,7 +58,8 @@ jobs:
             > mattermost.json
       - name: Read Content
         id: getcontent
-        run: echo "::set-output name=payload::$(cat mattermost.json)"
+        run: echo "payload=$(cat mattermost.json)" >> $GITHUB_OUTPUT
+        #run: echo "::set-output name=payload::$(cat mattermost.json)"
       - name: Pipeline Output
         run: echo "${{ steps.getcontent.outputs.payload }}"
       - name: Send Mattermost Message
