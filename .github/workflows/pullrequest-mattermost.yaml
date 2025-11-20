@@ -22,26 +22,23 @@ jobs:
           ACTION: ${{ github.event.action }}
           ACTOR: ${{ github.actor }}
           LINK: ${{ github.event.pull_request._links.html.href }}
-          BODY: ${{ toJSON(github.event.pull_request.body) }}
+          BODY: ${{ github.event.pull_request.body }}
           TITLE: ${{ github.event.pull_request.title }}
         shell: bash
         run: |
-          AUTHOR=${ACTOR}
-          ICON=":mermaid:"
-          BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g'  | sed 's/\"/\\"/g' )
-          echo "
-          {\"text\":
-          \"## ${ICON} New PR!\n
-          ### ${TITLE}\n
-          ${ACTION} in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
-          \`\`\`text\n
-          ${BODYLINE}\n
-          \`\`\`
-          \n----\n
-          [pull request](${LINK})
-          \"
-          }
-          " | paste -d' ' -s - > mattermost.json
+          # Use jq to properly construct JSON and escape all special characters
+          jq -n \
+            --arg icon ":mermaid:" \
+            --arg title "$TITLE" \
+            --arg action "$ACTION" \
+            --arg repository "$REPOSITORY" \
+            --arg repository_url "$REPOSITORY_URL" \
+            --arg author "$ACTOR" \
+            --arg body "$BODY" \
+            --arg link "$LINK" \
+            '{
+              text: ("## \($icon) New PR!\n### \($title)\n\($action) in: [\($repository)](\($repository_url)) by: **\($author)**\n\n```text\n\($body)\n```\n----\n[pull request](\($link))")
+            }' > mattermost.json
           cat mattermost.json
       - name: Read Content
         id: getcontent

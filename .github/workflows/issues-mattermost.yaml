@@ -29,33 +29,37 @@ jobs:
           ACTION: ${{ github.event.action }}
           ACTOR: ${{ github.actor }}
           TITLE: ${{ github.event.issue.title }}
-          BODY: ${{ toJSON(github.event.issue.body) }}
+          BODY: ${{ github.event.issue.body }}
           ANSWER: ${{ github.event.issue.comments_url }}
           LINK: ${{ github.event.issue.html_url }}
-          COMMENT_BODY: ${{ toJSON(github.event.comment.body) }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
           COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
         shell: bash
         run: |
           AUTHOR=${ACTOR}
           ICON=":ticket:"
-          BODYLINE=$(echo ${BODY} | sed 's/^\"//g' | sed 's/\"$//g' )
+          BODYLINE="${BODY}"
+
+          # Use comment body if this is a comment event
           if [ ! -z "${COMMENT_BODY}" ] && [ "${COMMENT_BODY}" != "null" ]; then
             AUTHOR=${COMMENT_AUTHOR}
             ICON=":speech_balloon:"
-            BODYLINE=$(echo ${COMMENT_BODY} | sed 's/^\"//g' | sed 's/\"$//g' )
-          fi;
-          echo "
-          {\"text\":
-          \"## ${ICON} ${TITLE}\n
-          ${ACTION} in: [${REPOSITORY}](${REPOSITORY_URL}) by: **${AUTHOR}**\n\n
-          \`\`\`text\n
-          ${BODYLINE}\n
-          \`\`\`
-          \n----\n
-          [open issue](${LINK})
-          \"
-          }
-          " | paste -d' ' -s - > mattermost.json
+            BODYLINE="${COMMENT_BODY}"
+          fi
+
+          # Use jq to properly construct JSON and escape all special characters
+          jq -n \
+            --arg icon "$ICON" \
+            --arg title "$TITLE" \
+            --arg action "$ACTION" \
+            --arg repository "$REPOSITORY" \
+            --arg repository_url "$REPOSITORY_URL" \
+            --arg author "$AUTHOR" \
+            --arg body "$BODYLINE" \
+            --arg link "$LINK" \
+            '{
+              text: ("## \($icon) \($title)\n\($action) in: [\($repository)](\($repository_url)) by: **\($author)**\n\n```text\n\($body)\n```\n----\n[open issue](\($link))")
+            }' > mattermost.json
       - name: Read Content
         id: getcontent
         run: echo "::set-output name=payload::$(cat mattermost.json)"            

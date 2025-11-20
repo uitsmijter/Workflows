@@ -23,7 +23,7 @@ jobs:
           REF: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           TITLE: ${{ github.workflow }}
-          BODY: ${{ toJSON(github.event.head_commit.message) }}
+          BODY: ${{ github.event.head_commit.message }}
           ANSWER: ${{ github.event.issue.comments_url }}
           LINK: ${{ github.event.head_commit.url }}
         shell: bash
@@ -38,11 +38,8 @@ jobs:
               ICON=":person_doing_cartwheel:"
           fi
 
-          # Properly handle JSON-escaped body - strip outer quotes and truncate
-          BODYLINE="$BODY"
-          BODYLINE="${BODYLINE#\"}"
-          BODYLINE="${BODYLINE%\"}"
-          TRIMMED_BODY="${BODYLINE:0:350}"
+          # Truncate body to 350 characters
+          TRIMMED_BODY="${BODY:0:350}"
 
           # Create JSON using jq for proper escaping
           jq -nc \
